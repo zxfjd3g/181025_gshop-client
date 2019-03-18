@@ -1,21 +1,30 @@
-# gshop
+# day01
+## 1. 项目开发准备
+    项目描述
+    技术选型
+    API接口
 
-> A Vue.js project
+## 2. 开启项目开发
+    使用脚手架创建项目
+    安装所有依赖/指定依赖
+    开发环境运行
+    生产环境打包与发布
 
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## 3. 搭建项目整体界面结构
+    stylus的理解和使用
+        结构化, 变量, 函数/minxin(混合)
+    vue-router的理解和使用
+        $router: 路由器对象, 包含一些操作路由的功能函数, 来实现编程式导航(跳转路由)
+        $route: 当前路由对象, 一些当前路由信息数据的容器, path/meta/query/params
+    项目路由拆分
+        确定路由组件显示的区域
+        确定路由是几级路由
+    底部导航组件: FooterGuide
+    导航路由组件: MSite/Search/Order/Profile
+    
+# day02
+## 1. 底部导航组件: NavFooter
+## 2. 4个导航路由静态路由组件
+## 3. 头部组件: Header
+## 4. 从Msite组件抽取商家列表组件: ShopList
+## 5. 注册/登陆的静态路由组件
