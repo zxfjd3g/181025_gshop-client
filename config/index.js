@@ -25,7 +25,6 @@ module.exports = {
           '^/baidu': ''
         }
       }
-
     },
 
     // Various Dev Server settings
