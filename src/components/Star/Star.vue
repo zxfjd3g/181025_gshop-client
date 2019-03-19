@@ -4,6 +4,11 @@
   </div>
 </template>
 <script>
+  
+  const CLASS_ON = 'on' // 全星
+  const CLASS_HALF = 'half' // 半星
+  const CLASS_OFF = 'off' // 灰星
+
   export default {
     // 声明接收哪些属性
     props: {
@@ -19,15 +24,15 @@
         const scoreInteger = Math.floor(score)
         // 1. 向arr中添加n个on
         for (let i = 0; i < scoreInteger; i++) {
-          arr.push('on')
+          arr.push(CLASS_ON)
         }
         // 2. 可能向arr中添加1个half
         if(score*10 - scoreInteger*10>=5) {
-          arr.push('half')
+          arr.push(CLASS_HALF)
         }
         // 3. 向arr中添加m个off
         while(arr.length<5) {
-          arr.push('off')
+          arr.push(CLASS_OFF)
         }
 
         return arr
