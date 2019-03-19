@@ -53,7 +53,4 @@ async function login() {
   }*/
 
   // const result = await ajax('/login', {name: 'Tom', pwd: '123'}, 'POST')
-
-
-
 }

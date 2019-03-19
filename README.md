@@ -24,11 +24,7 @@
     
 # day02
 
-## 1. 实现FooterGuide组件
-    编程式路由导航
-    动态class
-    
-## 2. 拆分组件
+## 1. 拆分组件
     1). 底部导航组件: FooterGuide
         编程式路由导航
         动态class

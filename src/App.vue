@@ -7,13 +7,12 @@
 </template>
 <script>
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
-  import {reqAddress} from './api'
 
   export default {
 
-    async mounted () {
-      const result = await reqAddress('116.36867', '40.10038')
-      console.log('result', result)
+    mounted () {
+      // 异步获取当前地址信息
+      this.$store.dispatch('getAddress')
     },
 
     components: {

@@ -1,7 +1,7 @@
 <template>
   <section class="msite">
     <!--首页头部-->
-    <Header title="昌平区北七家宏福科技园">
+    <Header :title="address.name || '正在定位中...'">
       <span class="header_search" slot="left">
         <i class="iconfont icon-sousuo"></i>
       </span>
@@ -131,8 +131,66 @@
   </section>
 </template>
 <script>
+  import {mapState} from 'vuex'
+  import Swiper from 'swiper'
+  import 'swiper/dist/css/swiper.css'
   import ShopList from '../../components/ShopList/ShopList.vue'
+
+
+
   export default {
+
+    // 初始显示之后
+    mounted () {
+      // 异步请求获取shops
+      this.$store.dispatch('getShops')
+      // 异步请求获取categorys
+      this.$store.dispatch('getCategorys')
+
+      // 创建swiper对象的时机? 必须在列表页面显示之后
+      new Swiper('.swiper-container', {
+        // 如果需要分页器
+        pagination: {
+          el: '.swiper-pagination',
+        },
+        loop: true, // 循环模式
+      })
+    },
+
+    computed: {
+      ...mapState(['address', 'categorys']),
+
+      /*
+      分类的二维数组
+      小数组中的最大长度为8
+       */
+      categorysArr () {
+        const {categorys} = this
+        // 空二维数组
+        const bigArr = []
+        let smalArr = []
+
+        // 遍历总数组
+        categorys.forEach(c => {
+
+          // 将小数组保存到大数组(只能保存1次)
+          if (smalArr.length===0) { // 如果当前小数组是空的
+            bigArr.push(smalArr)
+          }
+
+          // 将c保存小数组 (最大长度是8)
+          smalArr.push(c)
+          // 如果当前小数组满了, 准备一个新的小数组
+          if(smalArr.length===8) {
+            smalArr = []
+          }
+        })
+
+        return bigArr
+
+      }
+    },
+
     components: {
       ShopList
     }
