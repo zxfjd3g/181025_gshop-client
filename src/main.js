@@ -12,7 +12,15 @@ Vue.component('Star', Star)
 
 new Vue({
   el: '#app',
+
+  /*components: {
+    App,
+  },
+  template: '<App/>',*/
   render: h => h(App),
+  /*render: function (createElement) { // 将render返回的标签渲染到页面上去
+    return createElement(App)  // '<App/>'
+  },*/
   router, // 配置路由器
   store, // 配置vuex
 })
