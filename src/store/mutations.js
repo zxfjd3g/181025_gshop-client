@@ -4,7 +4,8 @@
 import {
   RECEIVE_SHOPS,
   RECEIVE_CATEGORYS,
-  RECEIVE_ADDRESS
+  RECEIVE_ADDRESS,
+  RECEIVE_USER
 } from './mutation-types'
 
 export default {
@@ -18,5 +19,7 @@ export default {
   [RECEIVE_ADDRESS] (state, {address}) { // {address: address数据对象}
     state.address = address
   },
+  [RECEIVE_USER] (state, user) { // {address: address数据对象}
+    state.user = user
+  },
 }
-

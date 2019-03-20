@@ -1,5 +1,5 @@
 ## 1. 说说在Vue项目中使用swiper的问题及解决办法
-    问题: 创建Swiper/BScroll对象后, 轮播/滑动没有效果?
+    问题: 创建Swiper对象后, 轮播/滑动没有效果?
     原因: 创建对象太早, 得在数据显示后创建
     解决: watch + $nextTick() 或 callback + $nextTick()
     
@@ -24,7 +24,7 @@
        JS语法的检查
     2). 构建工具
        作用: 简化项目构建, 实现自动化构建
-       常用: grunt/gulp/webpack
+       常用: gulp/webpack
 
 ## 4. webpack模块化打包的基本流程
     1> 连接: webpack从入口JS开始, 递归查找出所有相关联的模块, 并`连接`起来形成一个图(网)的结构

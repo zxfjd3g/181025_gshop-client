@@ -40,7 +40,8 @@
               </section>
               <section class="login_message">
                 <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                <img class="get_verification" src="./images/captcha.svg" alt="captcha">
+                <img class="get_verification" src="http://localhost:5000/captcha" alt="captcha"
+                     ref='captcha' @click="updateCaptcha">
               </section>
             </section>
           </div>
@@ -55,6 +56,8 @@
   </section>
 </template>
 <script>
+  import {reqSendCode, reqPwdLogin, reqSmsLogin} from '../../api'
+
   export default {
     data () {
       return {
@@ -80,46 +83,85 @@
       /*
       发送验证 + 倒计时
        */
-      sendCode () {
+      async sendCode () {
         // alert('sendCode')
 
-        // 启动倒计时
+        // 1. 启动倒计时
         // 更新computeTime为30s
         this.computeTime = 30
         // 启动循环定时器, 每隔1s, 将computeTime减1, 直到为0清除定时器
         const intervalId = setInterval(() => {
           this.computeTime--
-          if(this.computeTime===0) {
+          if(this.computeTime<=0) {
+            this.computeTime = 0
             clearInterval(intervalId)
           }
         }, 1000)
-
+        // 2. 发送ajax请求:  发送验证码
+        const result = await reqSendCode(this.phone)
+        if(result.code==0) {
+          alert('发送验证码成功')
+        } else {
+          alert('验证码发送失败')
+          // 停止倒计时
+          this.computeTime = 0
+        }
       },
 
       /*
       请求登陆 + 前台表单验证
        */
-      login () {
+      async login () {
         // 取出表单收集数据
         const {loginWay, isRightPhone, phone, code, name, pwd, captcha} = this
+        let result
         if(loginWay) { // 短信
           if(!isRightPhone) {
             return alert('请输入正确的手机号')
           } else if (!/^\d{6}$/.test(code)) {
             return alert('验证码必须是6位数字')
           }
+          // 发送登陆的ajax请求
+          result = await reqSmsLogin(phone, code)
+
+          if(result.code===0) { // 如果成功了, 停止计时
+            this.computeTime = 0
+          }
         } else { // 密码
           if(!name.trim()) {
-            alert('必须指定用户名')
+            return alert('必须指定用户名')
           } else if (!pwd.trim()) {
-            alert('必须指定密码')
+            return alert('必须指定密码')
           } else if (!/^.{4}$/.test(captcha)) {
-            alert('必须指定4位验证码')
+            return alert('必须指定4位验证码')
+          }
+          // 发送登陆的ajax请求
+          result = await reqPwdLogin({name, pwd, captcha})
+
+          if(result.code===1) { // 如果失败了, 更新图形验证码
+            this.updateCaptcha()
           }
         }
 
-        // 发送登陆的ajax请求
+        // debugger
+        // 根据result来处理
+        if(result.code===0) { // 登陆成功
+          // 1. 将user信息对象保存到state
+          const user = result.data
+          this.$store.dispatch('saveUser', user)
+          // 2. 跳转到个人中心
+          this.$router.replace('/profile')
+        } else { // 登陆失败
+          alert(result.msg)
+        }
 
+      },
+
+      // 更新图片验证码
+      updateCaptcha () {
+        // window.location = 'http://localhost:5000/captcha'
+        // 一旦给img指定新的src值, 浏览器就会自动发请求获取数据显示为图片  (添加时间戳参数)
+        this.$refs.captcha.src = 'http://localhost:5000/captcha?time=' + Date.now()
       }
     }
   }
