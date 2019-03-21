@@ -56,6 +56,7 @@
   </section>
 </template>
 <script>
+  import {Toast, MessageBox} from 'mint-ui'
   import {reqSendCode, reqPwdLogin, reqSmsLogin} from '../../api'
 
   export default {
@@ -100,9 +101,9 @@
         // 2. 发送ajax请求:  发送验证码
         const result = await reqSendCode(this.phone)
         if(result.code==0) {
-          alert('发送验证码成功')
+          Toast('发送验证码成功')
         } else {
-          alert('验证码发送失败')
+          MessageBox.alert('验证码发送失败')
           // 停止倒计时
           this.computeTime = 0
         }

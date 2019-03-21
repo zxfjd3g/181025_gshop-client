@@ -8,8 +8,6 @@
 <script>
   import FooterGuide from './components/FooterGuide/FooterGuide.vue'
 
-  import {reqInfo} from './api'
-
   export default {
 
     async mounted () {
@@ -17,9 +15,6 @@
       this.$store.dispatch('getAddress')
       // 异步获取用户信息
       this.$store.dispatch('getUser')
-
-      const result = await reqInfo()
-      console.log('result', result)
     },
 
     components: {
