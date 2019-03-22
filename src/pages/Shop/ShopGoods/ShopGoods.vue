@@ -2,10 +2,10 @@
   <div>
     <div class="goods">
       <div class="menu-wrapper">
-        <ul>
+        <ul ref="leftUl">
           <!--current: currentIndex-->
           <li class="menu-item" v-for="(good, index) in goods"
-              :key="index" :class="{current: currentIndex===index}">
+              :key="index" :class="{current: currentIndex===index}" @click="clickLeft(index)">
             <span class="text bottom-border-1px">
               <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
@@ -84,6 +84,14 @@
         scrollY in [top, nextTop)
          */
         const index = tops.findIndex((top, index) => scrollY>=top && scrollY<tops[index+1])
+        // 每次currentIndex变化, 左侧滚动到最新分类项(可能达不到)
+        if(index !== this.index && this.leftScroll) { // 当前下标变化了
+          // 将最新的index保存想来
+          this.index = index
+          // 左侧滚动到最新分类项
+          this.leftScroll.scrollToElement(this.$refs.leftUl.children[index], 300)
+        }
+
 
         return index
 
@@ -94,20 +102,23 @@
       // 初始化滚动对象
       _initScroll () {
         // 必须在列表显示之后创建: watch + $nextTick()
-        new BScroll('.menu-wrapper', {})
-        const rightScroll = new BScroll('.foods-wrapper', {
+        this.leftScroll = new BScroll('.menu-wrapper', {
+          click: true, // 分发自定义点击事件
+        })
+        this.rightScroll = new BScroll('.foods-wrapper', {
           probeType: 1, // 触摸  非实时
           // probeType: 2, // 触摸  实时
-          // probeType: 3,  // 触摸/惯性  实时
+          // probeType: 3,  // 触摸/惯性/编码  实时
+          click: true,
         })
 
         // 给右侧列表绑定滚动的监听
-        rightScroll.on('scroll', ({x, y}) => {
+        this.rightScroll.on('scroll', ({x, y}) => {
           console.log('scroll', y, x)
           this.scrollY = Math.abs(y)
         })
         // 给右侧列表绑定滚动结束的监听
-        rightScroll.on('scrollEnd', ({x, y}) => {
+        this.rightScroll.on('scrollEnd', ({x, y}) => {
           console.log('scrollEnd', y, x)
           this.scrollY = Math.abs(y)
         })
@@ -131,6 +142,18 @@
         // 更新tops状态数据
         this.tops = tops
         console.log('tops', tops)
+      },
+
+      clickLeft (index) {
+        console.log('clickLeft')
+        // 右侧对应位置的坐标
+        const top = this.tops[index]
+
+        // 设置scrollY为目标top
+        this.scrollY = top
+
+        // 让右侧滑动到对应的位置
+        this.rightScroll.scrollTo(0, -top, 300)
       }
     }
   }
