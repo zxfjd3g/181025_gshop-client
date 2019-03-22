@@ -3,8 +3,9 @@
     <div class="goods">
       <div class="menu-wrapper">
         <ul>
-          <!--current-->
-          <li class="menu-item" v-for="(good, index) in goods" :key="index">
+          <!--current: currentIndex-->
+          <li class="menu-item" v-for="(good, index) in goods"
+              :key="index" :class="{current: currentIndex===index}">
             <span class="text bottom-border-1px">
               <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
@@ -13,7 +14,7 @@
         </ul>
       </div>
       <div class="foods-wrapper">
-        <ul>
+        <ul ref="rightUl">
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
@@ -48,17 +49,89 @@
   import BScroll from 'better-scroll'
 
   export default {
-    mounted () {
-      this.$store.dispatch('getShopGoods')
+    data () {
+      return {
+        scrollY: 0, // 右侧列表的滑动坐标, 在滑动过程中实时设置
+        tops: [], // 右侧所有分类li的top组成的数组, 在初始显示列表时设置
+      }
+    },
 
+    async mounted () {
+      this.$store.dispatch('getShopGoods', () => { // 状态数据更新之后立即调用(界面还没有更新)
+        this.$nextTick(() => {
+          this._initScroll()
+          this._initTops()
+        })
+      })
+
+      /*await this.$store.dispatch('getShopGoods') // 内部在数据更新且界面更新之后调用resolve
+      // 必须在列表显示之后创建: watch + $nextTick()
       new BScroll('.menu-wrapper', {})
-      new BScroll('.foods-wrapper', {})
+      new BScroll('.foods-wrapper', {})*/
+
     },
 
     computed: {
       ...mapState({
         goods: state => state.shop.goods
-      })
+      }),
+
+      //当前分类项下标
+      currentIndex () {
+        const {scrollY, tops} = this
+        /*
+        tops = [0, 5, 8, 12, 15]
+        scrollY in [top, nextTop)
+         */
+        const index = tops.findIndex((top, index) => scrollY>=top && scrollY<tops[index+1])
+
+        return index
+
+      }
+    },
+
+    methods: {
+      // 初始化滚动对象
+      _initScroll () {
+        // 必须在列表显示之后创建: watch + $nextTick()
+        new BScroll('.menu-wrapper', {})
+        const rightScroll = new BScroll('.foods-wrapper', {
+          probeType: 1, // 触摸  非实时
+          // probeType: 2, // 触摸  实时
+          // probeType: 3,  // 触摸/惯性  实时
+        })
+
+        // 给右侧列表绑定滚动的监听
+        rightScroll.on('scroll', ({x, y}) => {
+          console.log('scroll', y, x)
+          this.scrollY = Math.abs(y)
+        })
+        // 给右侧列表绑定滚动结束的监听
+        rightScroll.on('scrollEnd', ({x, y}) => {
+          console.log('scrollEnd', y, x)
+          this.scrollY = Math.abs(y)
+        })
+
+      },
+
+      // 初始化所有分类li的top
+      _initTops () {
+
+        // 统计tops
+        const tops = []
+        let top = 0
+        tops.push(top)
+
+        const lis = this.$refs.rightUl.getElementsByClassName('food-list-hook')
+        Array.prototype.slice.call(lis).forEach(li => {
+          top += li.clientHeight
+          tops.push(top)
+        })
+
+        // 更新tops状态数据
+        this.tops = tops
+        console.log('tops', tops)
+      }
     }
   }
 </script>

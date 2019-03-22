@@ -52,11 +52,13 @@ const actions = {
   },
 
   // 异步获取商家商品列表
-  async getShopGoods({commit}) {
+  async getShopGoods({commit}, callback) {
     const result = await reqGoods()
     if (result.code === 0) {
       const goods = result.data
       commit(RECEIVE_GOODS, goods)
+      // 状态数据更新之后立即调用
+      typeof callback ==='function' && callback() // 调用回调函数相当于发了一个通知
     }
   },
 }

@@ -144,3 +144,45 @@
     3). mockjs的理解和使用
         用来提供mock数据接口的库
         生成随机数据, 拦截ajax请求
+
+# day05
+## 1. vuex的多模块编码
+    1). 设计多个模块
+        msite
+        user
+        shop
+    2). 将state拆分到对应的模块中, 确定整个state的结构
+    3). 将mutation和action拆分到对应的模块中
+    4). 在组件中通过mapState读取特定模块的状态数据
+        ...mapState({user: state => state.user.user})
+        
+## 2. ShopHeader组件
+    1). 异步显示数据效果的编码流程
+        ajax
+          ajax请求函数
+          接口请求函数
+        vuex
+          modules/shop.js
+        组件
+          dispatch(): 异步获取后台数据到vuex的state
+          mapState(): 从vuex的state中读取对应的数据
+          模板中显示
+    2). 初始显示异常
+        情况: Cannot read property 'xxx' of undefined"
+        原因: 初始值是空对象, 内部没有数据, 而模板中直接显示3层表达式
+        解决: 使用v-if指令
+    3). vue transition动画
+        <transition name="xxx">
+        xxx-enter-active / xxx-leave-active
+          transition
+        xxx-enter / xxx-leave-to
+          隐藏时的样式
+          
+## 3. 基本滑动
+    使用better-scroll
+    new BScroll(wrapDiv, {})
+    创建BScroll对象的时机
+      watch + $nextTick()
+      自定义callback + $nextTick
+      利用dispatch()返回promise
+    better-scroll禁用了原生的dom事件, 使用的是自定义事件
