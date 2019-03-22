@@ -1,10 +1,13 @@
 /*
 商家模块
  */
+import Vue from 'vue'
 import {
   RECEIVE_INFO,
   RECEIVE_GOODS,
-  RECEIVE_RATINGS
+  RECEIVE_RATINGS,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT
 } from '../mutation-types'
 import {
   reqGoods,
@@ -29,6 +32,24 @@ const mutations = {
 
   [RECEIVE_GOODS](state, goods) {
     state.goods = goods
+  },
+
+  [INCREMENT_FOOD_COUNT] (state, food) {
+    food.name = 'xxx'
+    if(food.count) {
+      food.count++
+    } else {
+      // 添加新的属性: count=1
+      // food.count = 1 // 新添加的属性没有数据绑定
+      // 向响应式对象中添加一个属性，并确保这个新属性同样是响应式的，且触发视图更新
+      Vue.set(food, 'count', 1)
+    }
+  },
+  [DECREMENT_FOOD_COUNT] (state, food) {
+    if(food.count>0) {
+      food.count--
+    }
+
   },
 }
 
@@ -61,6 +82,15 @@ const actions = {
       typeof callback ==='function' && callback() // 调用回调函数相当于发了一个通知
     }
   },
+
+  // 更新food数量
+  updateFoodCount ({commit}, {isAdd, food}) {
+    if(isAdd) {
+      commit(INCREMENT_FOOD_COUNT, food)
+    } else {
+      commit(DECREMENT_FOOD_COUNT, food)
+    }
+  }
 }
 
 const getters = {}
