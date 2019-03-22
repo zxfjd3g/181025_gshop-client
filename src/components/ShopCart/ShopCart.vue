@@ -19,7 +19,7 @@
         </div>
       </div>
       <transition name="move">
-        <div class="shopcart-list" v-show="isShow">
+        <div class="shopcart-list" v-show="listShow">
           <div class="list-header">
             <h1 class="title">购物车</h1>
             <span class="empty">清空</span>
@@ -40,12 +40,13 @@
 
     </div>
     <transition name="fade">
-      <div class="list-mask" v-show="isShow" @click="toggleShow"></div>
+      <div class="list-mask" v-show="listShow" @click="toggleShow"></div>
     </transition>
 
   </div>
 </template>
 <script>
+  import BScroll from 'better-scroll'
   import {mapState, mapGetters} from 'vuex'
   export default {
     data () {
@@ -76,12 +77,46 @@
         } else {
           return '去结算'
         }
+      },
+
+      // 判断列表是否需要显示
+      listShow () {
+        // 如果总数量为0, 直接返回false
+        if(this.totalCount===0) {
+          this.isShow = false
+          return false
+        }
+
+        // 如果列表要显示了, 去创建BScroll对象
+        if(this.isShow) {
+          console.log('-----')
+          /*
+          scroll对象只能有一个(单例对象)
+          1. 创建前, 判断不存在
+          2. 创建后, 保存对象
+           */
+          this.$nextTick(() => {
+            if(!this.scroll) { // 如果不存在, 创建并保存
+              this.scroll = new BScroll('.list-content', { // 向ul中添加style
+                click: true
+              })
+            } else { // 如果有, 通知scroll去重新统计一下
+              this.scroll.refresh() // 不会向ul添加style
+            }
+
+          })
+        }
+
+        return this.isShow
       }
     },
 
     methods: {
       toggleShow () {
-        this.isShow = !this.isShow
+        // 只有当有数量时,才切换
+        if(this.totalCount>0) {
+          this.isShow = !this.isShow
+        }
       }
     }
   }
