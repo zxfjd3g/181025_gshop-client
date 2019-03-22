@@ -41,12 +41,16 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
   </div>
 </template>
 <script>
   import {mapState} from 'vuex'
   import BScroll from 'better-scroll'
+
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
+  // import ShopCart from '@/components/ShopCart/ShopCart.vue'
 
   export default {
     data () {
@@ -155,6 +159,10 @@
         // 让右侧滑动到对应的位置
         this.rightScroll.scrollTo(0, -top, 300)
       }
+    },
+
+    components: {
+      ShopCart
     }
   }
 </script>
