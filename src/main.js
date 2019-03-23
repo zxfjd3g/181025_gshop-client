@@ -26,6 +26,10 @@ Vue.use(VueLazyload, { // 内部定义了一个全局指令: lazy
   loading,
 })
 
+// 将store对象保存到Vue函数对象上
+Vue.store = store
+
+
 new Vue({
   el: '#app',
 

@@ -13,3 +13,4 @@ Mock.mock('/info', {code: 0, data: shop.info})
 
 // export   不需要暴露任何东西, 只需要被执行一次
 console.log('mockServer')
+

@@ -164,6 +164,20 @@
         // 一旦给img指定新的src值, 浏览器就会自动发请求获取数据显示为图片  (添加时间戳参数)
         this.$refs.captcha.src = 'http://localhost:5000/captcha?time=' + Date.now()
       }
+    },
+
+    beforeRouteEnter (to, from, next) {
+      console.log('beforeRouteEnter()', this)
+
+      next((component) => { // 函数会延迟到组件对象创建后执行
+        // 如果还没有登陆, 放行
+        if(!component.$store.state.user.user._id) {
+          next()
+        } else {
+          // 如果已经登陆, 跳转到个人中心
+          next('/profile')
+        }
+      })
     }
   }
 </script>
