@@ -71,11 +71,13 @@ const actions = {
   },
 
   // 异步获取商家评价列表
-  async getShopRatings({commit}) {
+  async getShopRatings({commit}, callback) {
     const result = await reqRatings()
     if (result.code === 0) {
       const ratings = result.data
       commit(RECEIVE_RATINGS, ratings)
+      // 状态数据更新之后立即调用
+      typeof callback ==='function' && callback()
     }
   },
 
@@ -124,6 +126,14 @@ const getters = {
     return state.cartFoods.reduce((pre, food) => pre + food.count*food.price, 0)
   },
 
+  totalRatingCount (state) {
+    return state.ratings.length
+  },
+
+  // 推荐评价的数量
+  totalPositiveRatingCount (state) {
+    return state.ratings.reduce((pre, rating) => pre + (rating.rateType===0 ? 1 : 0), 0)
+  }
 }
 
 export default {
