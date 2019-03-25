@@ -11,7 +11,8 @@ import Star from './components/Star/Star.vue'
 import CartControl from './components/CartControl/CartControl.vue'
 import Split from './components/Split/Split.vue'
 
-import './mock/mockServer'
+import './mock/mockServer' // 加载mock接口的模块
+import './filters' // 加载自定义过滤的模块
 import loading from './common/imgs/loading.gif'
 
 // 注册全局组件

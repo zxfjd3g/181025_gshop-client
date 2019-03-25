@@ -45,9 +45,17 @@
   import 'swiper/dist/css/swiper.css'
   import ShopList from '../../components/ShopList/ShopList.vue'
 
-
+  import {msMixin} from '../../util/mixins'
 
   export default {
+
+    mixins: [msMixin],
+
+    data () {
+      return {
+        msg2: 123
+      }
+    },
 
     // 初始显示之后
     mounted () {

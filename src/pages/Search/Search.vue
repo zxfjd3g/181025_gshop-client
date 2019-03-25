@@ -8,7 +8,15 @@
   </section>
 </template>
 <script>
-  export default {}
+  import {msMixin} from '../../util/mixins'
+  export default {
+    mixins: [msMixin],
+    computed: {
+      xxx () {
+
+      }
+    }
+  }
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>
   @import "../../common/stylus/mixins.styl"
